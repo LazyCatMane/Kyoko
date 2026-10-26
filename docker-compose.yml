@@ -140,7 +140,8 @@ services:
       - GOCODER_VAAPI_RENDERER=${GOCODER_VAAPI_RENDERER:-/dev/dri/renderD128}
     profiles: ["qsv"]
 
-  # Kyoko: music library, served under /music and only reachable by logged-in
+  # Kyoko: music library api, served under /navidrome (the /music path is the
+  # Kyoko music page) and only reachable by logged-in
   # users. Kyoo's auth validates the request, then traefik tells navidrome which
   # user it is via the Remote-User header (navidrome "external auth"). Only
   # traefik's fixed IP is trusted to send that header.
@@ -149,7 +150,7 @@ services:
     restart: unless-stopped
     user: "${MUSIC_UID:-1000}:${MUSIC_GID:-100}"
     environment:
-      - ND_BASEURL=/music
+      - ND_BASEURL=/navidrome
       - ND_EXTAUTH_TRUSTEDSOURCES=${KYOKO_TRAEFIK_IP:-172.31.250.2}/32
       - ND_SCANSCHEDULE=${MUSIC_SCAN_SCHEDULE:-1h}
       - ND_SESSIONTIMEOUT=720h
@@ -162,7 +163,7 @@ services:
       - "${MUSIC_PORT:-4533}:4533"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.music.rule=PathPrefix(`/music`)"
+      - "traefik.http.routers.music.rule=PathPrefix(`/navidrome`)"
       - "traefik.http.routers.music.middlewares=phantom-token,music-user"
       - "traefik.http.middlewares.phantom-token.forwardauth.address=http://auth:4568/auth/jwt"
       - "traefik.http.middlewares.phantom-token.forwardauth.authRequestHeaders=Authorization,Cookie,X-Api-Key,Sec-WebSocket-Protocol"

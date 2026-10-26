@@ -20,7 +20,7 @@ const query = (params: Record<string, string>) =>
 	new URLSearchParams({ ...subsonicParams, ...params }).toString();
 
 export const musicUrl = (apiUrl: string) =>
-	`${apiUrl.replace(/\/$/, "")}/music`;
+	`${apiUrl.replace(/\/$/, "")}/navidrome`;
 
 export const streamUrl = (apiUrl: string, id: string) =>
 	`${musicUrl(apiUrl)}/rest/stream?${query({ id })}`;

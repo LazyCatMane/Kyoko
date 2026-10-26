@@ -1,7 +1,7 @@
 import { z } from "zod/v4";
 
 // Kyoko: music support. Music is served by navidrome (subsonic api) behind
-// `/music`, authenticated by kyoo's own auth. Only the fields we use are parsed.
+// `/navidrome`, authenticated by kyoo's own auth. Only the fields we use are parsed.
 
 const subsonic = <T extends z.ZodTypeAny>(key: string, inner: T) =>
 	z
