@@ -4,6 +4,7 @@ import Browse from "@material-symbols/svg-400/rounded/browse-fill.svg";
 import Close from "@material-symbols/svg-400/rounded/close.svg";
 import Login from "@material-symbols/svg-400/rounded/login.svg";
 import Logout from "@material-symbols/svg-400/rounded/logout.svg";
+import Music from "@material-symbols/svg-400/rounded/library_music-fill.svg";
 import Person from "@material-symbols/svg-400/rounded/person-fill.svg";
 import Play from "@material-symbols/svg-400/rounded/play_arrow-fill.svg";
 import Search from "@material-symbols/svg-400/rounded/search-fill.svg";
@@ -62,6 +63,7 @@ export const NavbarLeft = () => {
 		<View className="flex-row items-center gap-4">
 			<NavbarTitle />
 			<NavbarLink href="/browse" label={t("navbar.browse")} icon={Browse} />
+			<NavbarLink href="/music" label={t("navbar.music")} icon={Music} />
 			<NavbarLink
 				href="/profiles/me"
 				label={t("navbar.profile")}

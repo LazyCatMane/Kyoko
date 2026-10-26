@@ -140,6 +140,38 @@ services:
       - GOCODER_VAAPI_RENDERER=${GOCODER_VAAPI_RENDERER:-/dev/dri/renderD128}
     profiles: ["qsv"]
 
+  # Kyoko: music library, served under /music and only reachable by logged-in
+  # users. Kyoo's auth validates the request, then traefik tells navidrome which
+  # user it is via the Remote-User header (navidrome "external auth"). Only
+  # traefik's fixed IP is trusted to send that header.
+  navidrome:
+    image: deluan/navidrome:latest
+    restart: unless-stopped
+    user: "${MUSIC_UID:-1000}:${MUSIC_GID:-100}"
+    environment:
+      - ND_BASEURL=/music
+      - ND_EXTAUTH_TRUSTEDSOURCES=${KYOKO_TRAEFIK_IP:-172.31.250.2}/32
+      - ND_SCANSCHEDULE=${MUSIC_SCAN_SCHEDULE:-1h}
+      - ND_SESSIONTIMEOUT=720h
+      - ND_LOGLEVEL=info
+    volumes:
+      - ${MUSIC_ROOT:-./music}:/music:ro
+      - ${MUSIC_DATA:-./navidrome}:/data
+    # optional: direct access for subsonic apps (normal navidrome login)
+    ports:
+      - "${MUSIC_PORT:-4533}:4533"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.music.rule=PathPrefix(`/music`)"
+      - "traefik.http.routers.music.middlewares=phantom-token,music-user"
+      - "traefik.http.middlewares.phantom-token.forwardauth.address=http://auth:4568/auth/jwt"
+      - "traefik.http.middlewares.phantom-token.forwardauth.authRequestHeaders=Authorization,Cookie,X-Api-Key,Sec-WebSocket-Protocol"
+      - "traefik.http.middlewares.phantom-token.forwardauth.authResponseHeaders=Authorization"
+      # always overwrite Remote-User (never trust the client's) and drop kyoo's jwt
+      - "traefik.http.middlewares.music-user.headers.customrequestheaders.Remote-User=${MUSIC_USER:-kyoko}"
+      - "traefik.http.middlewares.music-user.headers.customrequestheaders.Authorization="
+      - "traefik.http.services.music.loadbalancer.server.port=4533"
+
   traefik:
     image: traefik:v3.7
     restart: unless-stopped
@@ -153,6 +185,10 @@ services:
       - "8901:8901"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    networks:
+      default:
+        # fixed so navidrome can trust only traefik for the Remote-User header
+        ipv4_address: ${KYOKO_TRAEFIK_IP:-172.31.250.2}
 
   postgres:
     image: postgres:18
@@ -177,3 +213,9 @@ volumes:
   images:
   profile_pictures:
   transcoder_metadata:
+
+networks:
+  default:
+    ipam:
+      config:
+        - subnet: ${KYOKO_SUBNET:-172.31.250.0/24}

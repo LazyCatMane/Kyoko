@@ -2,6 +2,8 @@ import { Stack } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useCSSVariable, useResolveClassNames } from "uniwind";
 import { MiniPlayer, TabBarHeightProvider } from "~/ui/mini-player";
+import { MusicBar } from "~/ui/music/bar";
+import { MusicPlayerProvider } from "~/ui/music/player";
 import { NavbarLeft, NavbarRight } from "~/ui/navbar";
 
 export { ErrorBoundary } from "~/ui/error-boundary";
@@ -16,6 +18,7 @@ export default function Layout() {
 	const { color } = useResolveClassNames("text-slate-200");
 
 	return (
+		<MusicPlayerProvider>
 		<TabBarHeightProvider>
 			<Stack
 				screenOptions={{
@@ -32,6 +35,8 @@ export default function Layout() {
 				}}
 			/>
 			<MiniPlayer />
+			<MusicBar />
 		</TabBarHeightProvider>
+		</MusicPlayerProvider>
 	);
 }

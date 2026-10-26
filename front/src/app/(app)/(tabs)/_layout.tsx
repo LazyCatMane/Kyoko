@@ -32,6 +32,13 @@ export default function TabsLayout() {
 					{t("navbar.browse")}
 				</NativeTabs.Trigger.Label>
 			</NativeTabs.Trigger>
+			<NativeTabs.Trigger name="music">
+				<NativeTabs.Trigger.Icon
+					sf={{ default: "music.note.list", selected: "music.note.list" }}
+					md="library_music"
+				/>
+				<NativeTabs.Trigger.Label>{t("navbar.music")}</NativeTabs.Trigger.Label>
+			</NativeTabs.Trigger>
 			<NativeTabs.Trigger name="profile">
 				<NativeTabs.Trigger.Icon
 					sf={{ default: "person", selected: "person.fill" }}
