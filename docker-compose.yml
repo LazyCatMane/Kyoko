@@ -179,6 +179,10 @@ services:
     command:
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
+      # only route this stack's containers (another kyoo/kyoko stack on the same
+      # host would otherwise be picked up too). set KYOKO_STACK to the compose
+      # project name (the folder name by default).
+      - "--providers.docker.constraints=Label(`com.docker.compose.project`, `${KYOKO_STACK:-kyoo}`)"
       - "--entryPoints.web.address=:8901"
       - "--accesslog=true"
       - "--accesslog.fields.queryparameters.defaultmode=drop"
