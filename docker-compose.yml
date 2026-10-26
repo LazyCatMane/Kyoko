@@ -220,3 +220,6 @@ networks:
     ipam:
       config:
         - subnet: ${KYOKO_SUBNET:-172.31.250.0/24}
+          # dynamic addresses come from the upper half so traefik's fixed
+          # address is never handed to another container first
+          ip_range: ${KYOKO_IP_RANGE:-172.31.250.128/25}
