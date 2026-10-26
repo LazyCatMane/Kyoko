@@ -6,13 +6,15 @@ import { EmptyView } from "~/ui/empty-view";
 import { useQueryState } from "~/utils";
 import { artistQuery } from "./api";
 import { MusicBarSpacer } from "./bar";
+import { useMusicReady } from "./init";
 import { AlbumCard, CardLoader } from "./components";
 import { musicError } from "./index";
 
 export const ArtistPage = () => {
 	const [id] = useQueryState("id", undefined!);
 	const { apiUrl } = useToken();
-	const { data, error } = useFetch(artistQuery(apiUrl, id));
+	const ready = useMusicReady();
+	const { data, error } = useFetch(artistQuery(apiUrl, id, ready));
 
 	if (error) return <EmptyView message={musicError(error)} />;
 

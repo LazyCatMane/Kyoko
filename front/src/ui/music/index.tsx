@@ -13,6 +13,7 @@ import {
 	searchQuery,
 } from "./api";
 import { MusicBarSpacer } from "./bar";
+import { useMusicReady } from "./init";
 import {
 	AlbumCard,
 	ArtistCard,
@@ -77,7 +78,7 @@ export const MusicPage = () => {
 
 const AlbumsGrid = ({ type }: { type: AlbumListType }) => {
 	const { apiUrl } = useToken();
-	const { data, error } = useFetch(albumListQuery(apiUrl, type));
+	const { data, error } = useFetch(albumListQuery(apiUrl, type, 500, useMusicReady()));
 
 	if (error) return <EmptyView message={musicError(error)} />;
 	if (data && !data.length)
@@ -95,7 +96,7 @@ const AlbumsGrid = ({ type }: { type: AlbumListType }) => {
 
 const ArtistsGrid = () => {
 	const { apiUrl } = useToken();
-	const { data, error } = useFetch(artistsQuery(apiUrl));
+	const { data, error } = useFetch(artistsQuery(apiUrl, useMusicReady()));
 
 	if (error) return <EmptyView message={musicError(error)} />;
 	if (data && !data.length) return <EmptyView message="No artists yet." />;
@@ -110,7 +111,7 @@ const ArtistsGrid = () => {
 
 const SearchResults = ({ text }: { text: string }) => {
 	const { apiUrl } = useToken();
-	const { data, error } = useFetch(searchQuery(apiUrl, text));
+	const { data, error } = useFetch(searchQuery(apiUrl, text, useMusicReady()));
 
 	if (error) return <EmptyView message={musicError(error)} />;
 	if (!data) return <P className="my-4">Searching…</P>;

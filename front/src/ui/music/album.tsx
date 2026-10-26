@@ -9,6 +9,7 @@ import { EmptyView } from "~/ui/empty-view";
 import { useQueryState } from "~/utils";
 import { albumQuery, coverImage, formatDuration } from "./api";
 import { MusicBarSpacer } from "./bar";
+import { useMusicReady } from "./init";
 import { NativeNotice, SongRow } from "./components";
 import { musicError } from "./index";
 import { shuffled } from "./player-state";
@@ -18,7 +19,8 @@ export const AlbumPage = () => {
 	const [id] = useQueryState("id", undefined!);
 	const { apiUrl } = useToken();
 	const player = useMusicPlayer();
-	const { data, error } = useFetch(albumQuery(apiUrl, id));
+	const ready = useMusicReady();
+	const { data, error } = useFetch(albumQuery(apiUrl, id, ready));
 
 	if (error) return <EmptyView message={musicError(error)} />;
 

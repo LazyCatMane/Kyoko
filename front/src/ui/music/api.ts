@@ -69,7 +69,9 @@ export const albumListQuery = (
 	apiUrl: string,
 	type: AlbumListType,
 	size = 500,
+	enabled = true,
 ): QueryIdentifier<ReturnType<typeof MusicAlbumListResponse.parse>> => ({
+	enabled,
 	parser: MusicAlbumListResponse,
 	path: ["rest", "getAlbumList2"],
 	params: { ...subsonicParams, type, size },
@@ -79,7 +81,9 @@ export const albumListQuery = (
 export const albumQuery = (
 	apiUrl: string,
 	id: string,
+	enabled = true,
 ): QueryIdentifier<ReturnType<typeof MusicAlbumResponse.parse>> => ({
+	enabled,
 	parser: MusicAlbumResponse,
 	path: ["rest", "getAlbum"],
 	params: { ...subsonicParams, id },
@@ -88,7 +92,9 @@ export const albumQuery = (
 
 export const artistsQuery = (
 	apiUrl: string,
+	enabled = true,
 ): QueryIdentifier<ReturnType<typeof MusicArtistsResponse.parse>> => ({
+	enabled,
 	parser: MusicArtistsResponse,
 	path: ["rest", "getArtists"],
 	params: { ...subsonicParams },
@@ -98,7 +104,9 @@ export const artistsQuery = (
 export const artistQuery = (
 	apiUrl: string,
 	id: string,
+	enabled = true,
 ): QueryIdentifier<ReturnType<typeof MusicArtistResponse.parse>> => ({
+	enabled,
 	parser: MusicArtistResponse,
 	path: ["rest", "getArtist"],
 	params: { ...subsonicParams, id },
@@ -108,6 +116,7 @@ export const artistQuery = (
 export const searchQuery = (
 	apiUrl: string,
 	text: string,
+	enabled = true,
 ): QueryIdentifier<ReturnType<typeof MusicSearchResponse.parse>> => ({
 	parser: MusicSearchResponse,
 	path: ["rest", "search3"],
@@ -119,7 +128,7 @@ export const searchQuery = (
 		songCount: 30,
 	},
 	options: music(apiUrl),
-	enabled: text.length > 0,
+	enabled: enabled && text.length > 0,
 });
 
 export const formatDuration = (seconds: number | undefined) => {
