@@ -30,8 +30,12 @@ export const MusicBar = () => {
 	const idle = "fill-slate-200";
 
 	return (
-		<Portal hostName="root">
+		// the root portal host lets clicks through by default (like modals do, we
+		// must opt in). `box-none` keeps the rest of the page clickable and only
+		// the bar itself receives presses.
+		<Portal hostName="root" style={{ pointerEvents: "box-none" }}>
 			<View
+				style={{ pointerEvents: "auto", zIndex: 50 }}
 				className={cn(
 					"absolute right-0 bottom-0 left-0 border-slate-700 border-t bg-slate-900/95",
 					Platform.OS === "web" && "backdrop-blur",
@@ -41,7 +45,7 @@ export const MusicBar = () => {
 					progress={player.position}
 					max={player.duration || 1}
 					setProgress={player.seek}
-					className="h-1"
+					className="px-2 py-1"
 				/>
 				<View className="flex-row items-center gap-2 px-2 py-1">
 					<Link
